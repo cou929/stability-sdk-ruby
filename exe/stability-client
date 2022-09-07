@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+require "optparse"
+require "mime/types"
+require "logger"
+require "stability_sdk"
+
+logger = Logger.new(STDOUT)
+logger.level = Logger::WARN
+
+opt = OptionParser.new
+Version = StabilitySDK::VERSION
+
+options = {}
+
+opt.banner = "Usage: stability-client [options] YOUR_PROMPT_TEXT"
+opt.separator ""
+opt.separator "Options:"
+opt.on("--api_key=VAL", "api key of DreamStudio account. You can also specify by a STABILITY_SDK_API_KEY environment variable") {|v| options[:api_key] = v }
+opt.on("-H", "--height=VAL", "height of image in pixel. default 512") {|v| options[:height] = v }
+opt.on("-W", "--width=VAL", "width of image in pixel. default 512") {|v| options[:width] = v }
+opt.on("-C", "--cfg_scale=VAL", "CFG scale factor. default 7.0") {|v| options[:cfg_scale] = v }
+opt.on("-A", "--sampler=VAL", "ddim, plms, k_euler, k_euler_ancestral, k_heun, k_dpm_2, k_dpm_2_ancestral, k_lms. default k_lms") {|v| options[:sampler] = v }
+opt.on("-s", "--steps=VAL", "number of steps. default 50") {|v| options[:steps] = v }
+opt.on("-S", "--seed=VAL", "random seed to use in integer") {|v| options[:seed] = v }
+opt.on("-p", "--prefix=VAL", "output prefixes for artifacts. default `generation`") {|v| options[:prefix] = v }
+opt.on("--no-store", "do not write out artifacts") {|v| options[:no_store] = v }
+opt.on("-n", "--num_samples=VAL", "number of samples to generate") {|v| options[:num_samples] = v }
+opt.on("-e", "--engine=VAL", "engine to use for inference. default `stable-diffusion-v1`") {|v| options[:engine_id] = v }
+opt.on("-v", "--verbose") { logger.level = Logger::DEBUG }
+opt.parse!(ARGV)
+
+prompt = ARGV.join(" ")
+raise StabilitySDK::InsufficientParameter, "prompt is required" if prompt.nil? || prompt == ""
+
+options[:api_key] = ENV["STABILITY_SDK_API_KEY"] if ENV["STABILITY_SDK_API_KEY"]
+raise StabilitySDK::InsufficientParameter, "api key is required" if !options.has_key?(:api_key) || options[:api_key] == ""
+
+client = StabilitySDK::Client.new(api_key: options[:api_key])
+
+client.generate(prompt, options) do |answer|
+  StabilitySDK::CLI.save_answer(answer, options, logger)
+end

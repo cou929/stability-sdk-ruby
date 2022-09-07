@@ -27,5 +27,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "grpc"
+  spec.add_dependency "mime-types"
   spec.add_development_dependency "grpc-tools"
 end

@@ -9,12 +9,4 @@ class StabilitySDKTest < Minitest::Test
     client = StabilitySDK::Client.new(api_key: "test cred")
     assert client.is_a? StabilitySDK::Client
   end
-
-  def test_that_client_requires_api_key
-    e = assert_raises StabilitySDK::InsufficientParameter do
-      StabilitySDK::Client.new
-    end
-
-    assert_equal "api_key is required", e.message
-  end
 end
