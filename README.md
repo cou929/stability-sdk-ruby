@@ -1,8 +1,6 @@
-# StabilitySDK
+# StabilitySDK - Ruby client for stability.ai APIs, such as Stable Diffusion
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/stability_sdk`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+A ruby client for [stability.ai](https://stability.ai/) APIs, e.g., [Stable Diffusion](https://stability.ai/blog/stable-diffusion-public-release). Referring to https://github.com/Stability-AI/stability-sdk.
 
 ## Installation
 
@@ -22,7 +20,63 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+First you need to create a [DreamStudio](https://beta.dreamstudio.ai/home)'s account and get an API Key of it.
+
+- Access [DreamStudio](https://beta.dreamstudio.ai/dream) and create an account if you have not had it
+- Go to the [membership page](https://beta.dreamstudio.ai/membership)
+- You can get the API Key in an `API Key` tab
+
+### Command line usage
+
+```sh
+STABILITY_SDK_API_KEY=YOUR_API_KEY stability-client 'A night in winter, oil-on-canvas landscape painting, by Vincent van Gogh'
+```
+
+This command saves an image like this:
+
+![3749380973_A_night_in_winter__oil_on_canvas_landscape_painting__by_Vincent_van_Gogh](https://user-images.githubusercontent.com/25668/188884116-0b03494b-0b34-49de-bbbc-89fbc2f6029d.png)
+
+
+```sh
+Usage: stability-client [options] YOUR_PROMPT_TEXT
+
+Options:
+        --api_key=VAL                api key of DreamStudio account. You can also specify by a STABILITY_SDK_API_KEY environment variable
+    -H, --height=VAL                 height of image in pixel. default 512
+    -W, --width=VAL                  width of image in pixel. default 512
+    -C, --cfg_scale=VAL              CFG scale factor. default 7.0
+    -A, --sampler=VAL                ddim, plms, k_euler, k_euler_ancestral, k_heun, k_dpm_2, k_dpm_2_ancestral, k_lms. default k_lms
+    -s, --steps=VAL                  number of steps. default 50
+    -S, --seed=VAL                   random seed to use in integer
+    -p, --prefix=VAL                 output prefixes for artifacts. default `generation`
+        --no-store                   do not write out artifacts
+    -n, --num_samples=VAL            number of samples to generate
+    -e, --engine=VAL                 engine to use for inference. default `stable-diffusion-v1`
+    -v, --verbose
+```
+
+### SDK usage
+
+This sample code saves a generated image as `result.png`.
+
+```ruby
+require "stability_sdk"
+
+client = StabilitySDK::Client.new(api_key: "YOUR_API_KEY")
+
+prompt = "your prompot here"
+options = {}
+
+client.generate(prompt, options) do |answer|
+  answer.artifacts.each do |artifact|
+    if artifact.type == :ARTIFACT_IMAGE
+      File.open("result.png", "wb") do |f|
+        f.write(artifact.binary)
+      end
+    end
+  end
+end
+```
 
 ## Development
 
@@ -32,5 +86,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/stability_sdk.
-
+Bug reports and pull requests are welcome on GitHub at https://github.com/cou929/stability-sdk-ruby.
