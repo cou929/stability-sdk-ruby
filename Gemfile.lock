@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    stability_sdk (0.1.0)
+    stability_sdk (0.2.0)
       grpc
       mime-types
 
