@@ -8,9 +8,11 @@ module StabilitySDK
     DEFAULT_IMAGE_HEIGHT = 512
     DEFAULT_SAMPLE_SIZE = 1
     DEFAULT_STEPS = 50
-    DEFAULT_ENGINE_ID = "stable-diffusion-v1"
+    DEFAULT_ENGINE_ID = "stable-diffusion-v1-5"
     DEFAULT_CFG_SCALE = 7.0
     DEFAULT_SAMPLER_ALGORITHM = Gooseai::DiffusionSampler::SAMPLER_K_LMS
+    DEFAULT_START_SCHEDULE = 1.0
+    DEFAULT_END_SCHEDULE = 0.01
 
     sampler_algorithms = {
       "ddim": Gooseai::DiffusionSampler::SAMPLER_DDIM,
@@ -33,21 +35,8 @@ module StabilitySDK
     end
 
     def generate(prompt, options, &block)
-      image_param = image_param(options)
-      req = Gooseai::Request.new(
-        prompt: [Gooseai::Prompt.new(text: prompt)],
-        engine_id: options[:engine_id] || DEFAULT_ENGINE_ID,
-        image: image_param
-      )
-
-      @stub.generate(req).each do |answer|
-        block.call(answer)
-      end
-    end
-
-    def image_param(options={})
       width = options.has_key?(:width) ? options[:width].to_i : DEFAULT_IMAGE_WIDTH
-      height = options.has_key?(:height) ? options[:height] : DEFAULT_IMAGE_HEIGHT
+      height = options.has_key?(:height) ? options[:height].to_i : DEFAULT_IMAGE_HEIGHT
       samples = options.has_key?(:num_samples) ? [:num_samples].to_i : DEFAULT_SAMPLE_SIZE
       steps = options.has_key?(:steps) ? options[:steps].to_i : DEFAULT_STEPS
       seed = options.has_key?(:seed) ? [options[:seed]] : [rand(4294967295)]
@@ -61,7 +50,28 @@ module StabilitySDK
         ),
       )]
 
-      return Gooseai::ImageParameters.new(
+      prompt_param = []
+      if prompt != ""
+        prompt_param << Gooseai::Prompt.new(text: prompt)
+      end
+      if options.has_key?(:init_image)
+        prompt_param << init_image_to_prompt(options[:init_image])
+        parameters = [Gooseai::StepParameter.new(
+          scaled_step: 0,
+          sampler: Gooseai::SamplerParameters.new(
+            cfg_scale: options.has_key?(:cfg_scale) ? options[:cfg_scale].to_f : DEFAULT_CFG_SCALE,
+          ),
+          schedule: Gooseai::ScheduleParameters.new(
+            start: options.has_key?(:start_schedule) ? options[:start_schedule].to_f : DEFAULT_START_SCHEDULE,
+            end: options.has_key?(:end_schedule) ? options[:end_schedule].to_f : DEFAULT_END_SCHEDULE,
+          ),
+        )]
+      end
+      if options.has_key?(:mask_image)
+        prompt_param << mask_image_to_prompt(options[:mask_image])
+      end
+
+      image_param = Gooseai::ImageParameters.new(
         width: width,
         height: height,
         samples: samples,
@@ -69,6 +79,39 @@ module StabilitySDK
         seed: seed,
         transform: transform,
         parameters: parameters,
+      )
+
+      req = Gooseai::Request.new(
+        prompt: prompt_param,
+        engine_id: options[:engine_id] || DEFAULT_ENGINE_ID,
+        image: image_param
+      )
+
+      @stub.generate(req).each do |answer|
+        block.call(answer)
+      end
+    end
+
+    def init_image_to_prompt(path)
+      bin = IO.binread(path)
+      return Gooseai::Prompt.new(
+        artifact: Gooseai::Artifact.new(
+          type: Gooseai::ArtifactType::ARTIFACT_IMAGE,
+          binary: bin,
+        ),
+        parameters: Gooseai::PromptParameters.new(
+          init: true
+        ),
+      )
+    end
+
+    def mask_image_to_prompt(path)
+      bin = IO.binread(path)
+      return Gooseai::Prompt.new(
+        artifact: Gooseai::Artifact.new(
+          type: Gooseai::ArtifactType::ARTIFACT_MASK,
+          binary: bin,
+        ),
       )
     end
   end

@@ -64,9 +64,14 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     add_message "gooseai.ConditionerParameters" do
       proto3_optional :vector_adjust_prior, :string, 1
     end
+    add_message "gooseai.ScheduleParameters" do
+      optional :start, :float, 1
+      optional :end, :float, 2
+    end
     add_message "gooseai.StepParameter" do
       optional :scaled_step, :float, 1
       proto3_optional :sampler, :message, 2, "gooseai.SamplerParameters"
+      proto3_optional :schedule, :message, 3, "gooseai.ScheduleParameters"
     end
     add_message "gooseai.TransformType" do
       oneof :type do
@@ -125,6 +130,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       value :ARTIFACT_TOKENS, 4
       value :ARTIFACT_EMBEDDING, 5
       value :ARTIFACT_CLASSIFICATIONS, 6
+      value :ARTIFACT_MASK, 7
     end
     add_enum "gooseai.DiffusionSampler" do
       value :SAMPLER_DDIM, 0
@@ -166,6 +172,7 @@ module Gooseai
   Answer = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.Answer").msgclass
   SamplerParameters = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.SamplerParameters").msgclass
   ConditionerParameters = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ConditionerParameters").msgclass
+  ScheduleParameters = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ScheduleParameters").msgclass
   StepParameter = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.StepParameter").msgclass
   TransformType = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.TransformType").msgclass
   ImageParameters = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ImageParameters").msgclass

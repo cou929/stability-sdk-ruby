@@ -27,14 +27,20 @@ opt.on("-p", "--prefix=VAL", "output prefixes for artifacts. default `generation
 opt.on("--no-store", "do not write out artifacts") {|v| options[:no_store] = v }
 opt.on("-n", "--num_samples=VAL", "number of samples to generate") {|v| options[:num_samples] = v }
 opt.on("-e", "--engine=VAL", "engine to use for inference. default `stable-diffusion-v1`") {|v| options[:engine_id] = v }
+opt.on("-i", "--init_image=VAL", "path to init image") {|v| options[:init_image] = v }
+opt.on("-m", "--mask_image=VAL", "path to mask image") {|v| options[:mask_image] = v }
+opt.on("--start_schedule=VAL", "start schedule for init image (must be greater than 0, 1 is full strength text prompt, no trace of image). default 1.0") {|v| options[:start_schedule] = v }
+opt.on("--end_schedule=VAL", "end schedule for init image. default 0.01") {|v| options[:end_schedule] = v }
 opt.on("-v", "--verbose") { logger.level = Logger::DEBUG }
 opt.parse!(ARGV)
 
 prompt = ARGV.join(" ")
-raise StabilitySDK::InsufficientParameter, "prompt is required" if prompt.nil? || prompt == ""
+raise StabilitySDK::InsufficientParameter, "prompt and/or init_image is required" if (prompt.nil? || prompt == "") && !options.has_key?(:init_image)
 
 options[:api_key] = ENV["STABILITY_SDK_API_KEY"] if ENV["STABILITY_SDK_API_KEY"]
-raise StabilitySDK::InsufficientParameter, "api key is required" if !options.has_key?(:api_key) || options[:api_key] == ""
+raise StabilitySDK::InsufficientParameter, "api key is required" if !options.has_key?(:api_key)
+
+raise StabilitySDK::InsufficientParameter, "init_image is required if mask_image is provided" if options.has_key?(:mask_image) && !options.has_key?(:init_image)
 
 client = StabilitySDK::Client.new(api_key: options[:api_key])
 
