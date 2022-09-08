@@ -36,6 +36,12 @@ This command saves an image like this:
 
 ![3749380973_A_night_in_winter__oil_on_canvas_landscape_painting__by_Vincent_van_Gogh](https://user-images.githubusercontent.com/25668/188884116-0b03494b-0b34-49de-bbbc-89fbc2f6029d.png)
 
+img2img example:
+
+```sh
+STABILITY_SDK_API_KEY=YOUR_API_KEY stability-client --init_image=/path/to/image.png --mask_image=/path/to/mask.png 'your prompt'
+```
+
 
 ```sh
 Usage: stability-client [options] YOUR_PROMPT_TEXT
@@ -52,6 +58,10 @@ Options:
         --no-store                   do not write out artifacts
     -n, --num_samples=VAL            number of samples to generate
     -e, --engine=VAL                 engine to use for inference. default `stable-diffusion-v1`
+    -i, --init_image=VAL             path to init image
+    -m, --mask_image=VAL             path to mask image
+        --start_schedule=VAL         start schedule for init image (must be greater than 0, 1 is full strength text prompt, no trace of image). default 1.0
+        --end_schedule=VAL           end schedule for init image. default 0.01
     -v, --verbose
 ```
 
@@ -66,6 +76,10 @@ client = StabilitySDK::Client.new(api_key: "YOUR_API_KEY")
 
 prompt = "your prompot here"
 options = {}
+
+# for the case of img2img:
+# options[:init_image] = "/path/to/image.png"
+# options[:mask_image] = "/path/to/mask.png"
 
 client.generate(prompt, options) do |answer|
   answer.artifacts.each do |artifact|
