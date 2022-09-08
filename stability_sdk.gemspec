@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["cou929@gmail.com"]
 
   spec.summary       = "Ruby client for interacting with stability.ai APIs (e.g. stable diffusion inference)"
-  spec.description   = "Ruby client of https://github.com/Stability-AI/stability-sdk"
+  spec.description   = "Interacting with stability.ai APIs (e.g. stable diffusion inference). Ruby client of https://github.com/Stability-AI/stability-sdk ."
   spec.homepage      = "https://github.com/cou929/stability-sdk-ruby"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
