@@ -65,8 +65,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       proto3_optional :vector_adjust_prior, :string, 1
     end
     add_message "gooseai.ScheduleParameters" do
-      optional :start, :float, 1
-      optional :end, :float, 2
+      proto3_optional :start, :float, 1
+      proto3_optional :end, :float, 2
     end
     add_message "gooseai.StepParameter" do
       optional :scaled_step, :float, 1
@@ -110,10 +110,24 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :requested_type, :enum, 3, "gooseai.ArtifactType"
       repeated :prompt, :message, 4, "gooseai.Prompt"
       proto3_optional :conditioner, :message, 6, "gooseai.ConditionerParameters"
-      proto3_optional :classifier, :message, 7, "gooseai.ClassifierParameters"
       oneof :params do
         optional :image, :message, 5, "gooseai.ImageParameters"
+        optional :classifier, :message, 7, "gooseai.ClassifierParameters"
       end
+    end
+    add_message "gooseai.OnStatus" do
+      repeated :reason, :enum, 1, "gooseai.FinishReason"
+      proto3_optional :target, :string, 2
+      repeated :action, :enum, 3, "gooseai.StageAction"
+    end
+    add_message "gooseai.Stage" do
+      optional :id, :string, 1
+      optional :request, :message, 2, "gooseai.Request"
+      repeated :on_status, :message, 3, "gooseai.OnStatus"
+    end
+    add_message "gooseai.ChainRequest" do
+      optional :request_id, :string, 1
+      repeated :stage, :message, 2, "gooseai.Stage"
     end
     add_enum "gooseai.FinishReason" do
       value :NULL, 0
@@ -159,6 +173,11 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       value :CLSFR_MODE_ZEROSHOT, 0
       value :CLSFR_MODE_MULTICLASS, 1
     end
+    add_enum "gooseai.StageAction" do
+      value :STAGE_ACTION_PASS, 0
+      value :STAGE_ACTION_DISCARD, 1
+      value :STAGE_ACTION_RETURN, 2
+    end
   end
 end
 
@@ -180,10 +199,14 @@ module Gooseai
   ClassifierCategory = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ClassifierCategory").msgclass
   ClassifierParameters = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ClassifierParameters").msgclass
   Request = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.Request").msgclass
+  OnStatus = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.OnStatus").msgclass
+  Stage = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.Stage").msgclass
+  ChainRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ChainRequest").msgclass
   FinishReason = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.FinishReason").enummodule
   ArtifactType = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ArtifactType").enummodule
   DiffusionSampler = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.DiffusionSampler").enummodule
   Upscaler = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.Upscaler").enummodule
   Action = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.Action").enummodule
   ClassifierMode = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ClassifierMode").enummodule
+  StageAction = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.StageAction").enummodule
 end

@@ -15,6 +15,7 @@ module Gooseai
       self.service_name = 'gooseai.GenerationService'
 
       rpc :Generate, ::Gooseai::Request, stream(::Gooseai::Answer)
+      rpc :ChainGenerate, ::Gooseai::ChainRequest, stream(::Gooseai::Answer)
     end
 
     Stub = Service.rpc_stub_class
