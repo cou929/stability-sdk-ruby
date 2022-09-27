@@ -39,7 +39,7 @@ module StabilitySDK
       height = options.has_key?(:height) ? options[:height].to_i : DEFAULT_IMAGE_HEIGHT
       samples = options.has_key?(:num_samples) ? [:num_samples].to_i : DEFAULT_SAMPLE_SIZE
       steps = options.has_key?(:steps) ? options[:steps].to_i : DEFAULT_STEPS
-      seed = options.has_key?(:seed) ? [options[:seed]] : [rand(4294967295)]
+      seed = options.has_key?(:seed) ? [options[:seed]].to_i : [rand(4294967295)]
       transform = Gooseai::TransformType.new(
         diffusion: options.has_key?(:sampler) ? sampler_algorithms[options[:sampler]] : DEFAULT_SAMPLER_ALGORITHM,
       )
