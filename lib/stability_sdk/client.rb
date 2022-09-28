@@ -42,7 +42,7 @@ module StabilitySDK
     def generate(prompt, options, &block)
       width = options.has_key?(:width) ? options[:width].to_i : DEFAULT_IMAGE_WIDTH
       height = options.has_key?(:height) ? options[:height].to_i : DEFAULT_IMAGE_HEIGHT
-      samples = options.has_key?(:num_samples) ? [:num_samples].to_i : DEFAULT_SAMPLE_SIZE
+      samples = options.has_key?(:num_samples) ? options[:num_samples].to_i : DEFAULT_SAMPLE_SIZE
       steps = options.has_key?(:steps) ? options[:steps].to_i : DEFAULT_STEPS
       seed = options.has_key?(:seed) ? [options[:seed].to_i] : [rand(4294967295)]
       transform = Gooseai::TransformType.new(
