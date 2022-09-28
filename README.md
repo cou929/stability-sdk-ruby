@@ -19,8 +19,7 @@ Or install it yourself as:
     $ gem install stability_sdk
 
 ## Usage
-
-First you need to create a [DreamStudio](https://beta.dreamstudio.ai/home)'s account and get an API Key of it.
+First, you need to create a [DreamStudio](https://beta.dreamstudio.ai/home)'s account and get an API Key of it.
 
 - Access [DreamStudio](https://beta.dreamstudio.ai/dream) and create an account if you have not had it
 - Go to the [membership page](https://beta.dreamstudio.ai/membership)
@@ -72,7 +71,7 @@ This sample code saves a generated image as `result.png`.
 ```ruby
 require "stability_sdk"
 
-client = StabilitySDK::Client.new(api_key: "YOUR_API_KEY")
+client = StabilitySDK::Client.new(api_key: "YOUR_API_KEY", timeout: 600)
 
 prompt = "your prompot here"
 options = {}
