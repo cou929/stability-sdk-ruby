@@ -9,4 +9,9 @@ class StabilitySDKTest < Minitest::Test
     client = StabilitySDK::Client.new(api_key: "test cred")
     assert client.is_a? StabilitySDK::Client
   end
+
+  def test_client_initialization_with_params
+    client = StabilitySDK::Client.new(api_key: "test cred", timeout: 30)
+    assert client.is_a? StabilitySDK::Client
+  end
 end
