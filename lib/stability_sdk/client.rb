@@ -1,5 +1,6 @@
 require "grpc"
 require "generation_services_pb"
+require "pry"
 
 module StabilitySDK
   class Client
@@ -31,7 +32,12 @@ module StabilitySDK
       call_creds = GRPC::Core::CallCredentials.new(proc { { "authorization" => "Bearer #{options[:api_key]}" } })
       creds = channel_creds.compose(call_creds)
 
-      @stub = Gooseai::GenerationService::Stub.new(host, creds)
+      stub_params = {}
+      [:channel_override, :timeout, :propagate_mask, :channel_args, :interceptors].each do |kw|
+        stub_params[kw] = options[kw] if options.has_key?(kw)
+      end
+
+      @stub = Gooseai::GenerationService::Stub.new(host, creds, **stub_params)
     end
 
     def generate(prompt, options, &block)
