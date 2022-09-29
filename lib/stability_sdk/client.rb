@@ -14,7 +14,7 @@ module StabilitySDK
     DEFAULT_START_SCHEDULE = 1.0
     DEFAULT_END_SCHEDULE = 0.01
 
-    sampler_algorithms = {
+    SAMPLER_ALGORITHMS = {
       "ddim": Gooseai::DiffusionSampler::SAMPLER_DDIM,
       "plms": Gooseai::DiffusionSampler::SAMPLER_DDPM,
       "k_euler": Gooseai::DiffusionSampler::SAMPLER_K_EULER,
@@ -46,7 +46,7 @@ module StabilitySDK
       steps = options.has_key?(:steps) ? options[:steps].to_i : DEFAULT_STEPS
       seed = options.has_key?(:seed) ? [options[:seed].to_i] : [rand(4294967295)]
       transform = Gooseai::TransformType.new(
-        diffusion: options.has_key?(:sampler) ? sampler_algorithms[options[:sampler]] : DEFAULT_SAMPLER_ALGORITHM,
+        diffusion: options.has_key?(:sampler) ? SAMPLER_ALGORITHMS[options[:sampler]] : DEFAULT_SAMPLER_ALGORITHM,
       )
       parameters = [Gooseai::StepParameter.new(
         scaled_step: 0,
