@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     stability_sdk (0.2.8)
-      grpc (>= 1.0.0)
+      grpc (>= 1.41.1)
       mime-types (>= 3.0.0)
 
 GEM
@@ -23,6 +23,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-20
+  ruby
 
 DEPENDENCIES
   grpc-tools
