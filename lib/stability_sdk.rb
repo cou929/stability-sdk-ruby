@@ -5,4 +5,5 @@ require "stability_sdk/cli"
 module StabilitySDK
   class Error < StandardError; end
   class InsufficientParameter < StandardError; end
+  class InvalidParameter < StandardError; end
 end
