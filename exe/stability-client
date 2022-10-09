@@ -2,6 +2,7 @@
 
 require "optparse"
 require "mime/types"
+require "fastimage"
 require "logger"
 require "stability_sdk"
 
@@ -41,6 +42,11 @@ options[:api_key] = ENV["STABILITY_SDK_API_KEY"] if ENV["STABILITY_SDK_API_KEY"]
 raise StabilitySDK::InsufficientParameter, "api key is required" if !options.has_key?(:api_key)
 
 raise StabilitySDK::InsufficientParameter, "init_image is required if mask_image is provided" if options.has_key?(:mask_image) && !options.has_key?(:init_image)
+
+if options.has_key?(:init_image)
+  size = FastImage.size(options[:init_image])
+  raise StabilitySDK::InvalidParameter, "width and height of init_image must be a multiple of 64" if size[0] % 64 != 0 || size[1] % 64 != 0
+end
 
 client = StabilitySDK::Client.new(api_key: options[:api_key])
 
