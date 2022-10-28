@@ -97,7 +97,7 @@ end
 
 Dashboard API is a way to interact with DreamStudio Web UIs, such as getting user info, payment info, etc.
 
-Currently, there is no canonical way to get the API key for the Dashboard API. You can retrieve the key by logging in to the [DreamStudio Web page](https://beta.dreamstudio.ai/dream) and inspect request the authorization header with Chrome Developer Tool. Please be aware that how to refresh the key or an expiration period is unknown.
+Currently, there is no canonical way to get the API key for the Dashboard API. You can retrieve the key by logging in to the [DreamStudio Web page](https://beta.dreamstudio.ai/dream) and inspect request the authorization header with Chrome Developer Tool. Please be aware that how to refresh the key or an expiration period is unknown. See also https://github.com/Stability-AI/stability-sdk/issues/23
 
 ```sh
 # get user info
