@@ -6,6 +6,9 @@ require 'generation_pb'
 
 module Gooseai
   module GenerationService
+    #
+    # gRPC services
+    #
     class Service
 
       include ::GRPC::GenericService
