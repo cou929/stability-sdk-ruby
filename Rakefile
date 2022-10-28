@@ -13,3 +13,8 @@ desc "Parse proto file and generate output"
 task :protoc do
   sh "grpc_tools_ruby_protoc -I api-interfaces/src/proto/ --ruby_out=lib --grpc_out=lib api-interfaces/src/proto/generation.proto"
 end
+
+desc "Compile a dashboard proto file"
+task :protoc_dashboard do
+  sh "grpc_tools_ruby_protoc -I api-interfaces/src/proto/ --ruby_out=lib --grpc_out=lib api-interfaces/src/proto/dashboard.proto"
+end
