@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+require "thor"
+require "logger"
+require "stability_sdk"
+
+logger = Logger.new(STDOUT)
+logger.level = Logger::WARN
+
+Version = StabilitySDK::VERSION
+
+class CLI < Thor
+  class_option :api_key
+
+  desc "get_me", "get user info"
+  def get_me
+    client = self.client(options)
+    res = client.get_me
+    puts res.to_json
+  end
+
+  desc "get_organization", "get organization info"
+  def get_organization
+    client = self.client(options)
+    res = client.get_organization
+    puts res.to_json
+  end
+
+  private
+
+  def client(options)
+    api_key = options[:api_key]
+    api_key = ENV["STABILITY_SDK_DASHBOARD_API_KEY"] if ENV["STABILITY_SDK_DASHBOARD_API_KEY"]
+    raise StabilitySDK::InsufficientParameter, "api key is required" if api_key.nil?
+
+    return StabilitySDK::Unstable::DashboardClient.new(api_key: api_key)
+  end
+end
+
+CLI.start(ARGV)
