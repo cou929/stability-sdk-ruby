@@ -91,6 +91,25 @@ client.generate(prompt, options) do |answer|
 end
 ```
 
+### [Unstable] Dashboard API
+
+**This feature is in a very early stage of development.**
+
+Dashboard API is a way to interact with DreamStudio Web UIs, such as getting user info, payment info, etc.
+
+Currently, there is no canonical way to get the API key for the Dashboard API. You can retrieve the key by logging in to the [DreamStudio Web page](https://beta.dreamstudio.ai/dream) and inspect request the authorization header with Chrome Developer Tool. Please be aware that how to refresh the key or an expiration period is unknown.
+
+```sh
+# get user info
+STABILITY_SDK_DASHBOARD_API_KEY=YOUR_API_KEY stability-dashboard-client-unstable get_me
+
+# get organization info
+STABILITY_SDK_DASHBOARD_API_KEY=YOUR_API_KEY stability-dashboard-client-unstable get_organization
+
+# i.e, get remaining balance
+STABILITY_SDK_DASHBOARD_API_KEY=YOUR_API_KEY stability-dashboard-client-unstable get_organization | jq .paymentInfo.balance
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
