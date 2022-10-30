@@ -32,6 +32,11 @@ opt.on("-i", "--init_image=VAL", "path to init image") {|v| options[:init_image]
 opt.on("-m", "--mask_image=VAL", "path to mask image") {|v| options[:mask_image] = v }
 opt.on("--start_schedule=VAL", "start schedule for init image (must be greater than 0, 1 is full strength text prompt, no trace of image). default 1.0") {|v| options[:start_schedule] = v }
 opt.on("--end_schedule=VAL", "end schedule for init image. default 0.01") {|v| options[:end_schedule] = v }
+opt.on("--guidance_preset=VAL", String,"Guidance preset to use. See generation.GuidancePreset for supported values. default `GUIDANCE_PRESET_NONE`") {|v| options[:guidance_preset] = v }
+opt.on("--guidance_cuts=VAL", Integer, "Number of cuts to use for guidance. default 0") {|v| options[:guidance_cuts] = v }
+opt.on("--guidance_strength=VAL", Float, "Strength of the guidance. We recommend values in range [0.0,1.0]. A good default is 0.25. default nil") {|v| options[:guidance_strength] = v }
+opt.on("--guidance_prompt=VAL", String, "Prompt to use for guidance, defaults to `YOUR_PROMPT_TEXT` argument (above) if not specified.") {|v| options[:guidance_prompt] = v }
+opt.on("--guidance_models=VAL", Array, "Models to use for guidance. default nil") {|v| options[:guidance_models] = v }
 opt.on("-v", "--verbose") { logger.level = Logger::DEBUG }
 opt.parse!(ARGV)
 
@@ -48,7 +53,7 @@ if options.has_key?(:init_image)
   raise StabilitySDK::InvalidParameter, "width and height of init_image must be a multiple of 64" if size[0] % 64 != 0 || size[1] % 64 != 0
 end
 
-client = StabilitySDK::Client.new(api_key: options[:api_key])
+client = StabilitySDK::Client.new(api_key: options[:api_key], logger: logger)
 
 client.generate(prompt, options) do |answer|
   StabilitySDK::CLI.save_answer(answer, options, logger)

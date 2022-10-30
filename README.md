@@ -61,7 +61,23 @@ Options:
     -m, --mask_image=VAL             path to mask image
         --start_schedule=VAL         start schedule for init image (must be greater than 0, 1 is full strength text prompt, no trace of image). default 1.0
         --end_schedule=VAL           end schedule for init image. default 0.01
+        --guidance_preset=VAL        Guidance preset to use. See generation.GuidancePreset for supported values. default `GUIDANCE_PRESET_NONE`
+        --guidance_cuts=VAL          Number of cuts to use for guidance. default 0
+        --guidance_strength=VAL      Strength of the guidance. We recommend values in range [0.0,1.0]. A good default is 0.25. default nil
+        --guidance_prompt=VAL        Prompt to use for guidance, defaults to `YOUR_PROMPT_TEXT` argument (above) if not specified.
+        --guidance_models=VAL        Models to use for guidance. default nil
     -v, --verbose
+```
+
+#### CLIP guidance
+
+By specifying `--guidance_preset` and other `--guidance_*` options, you can use CLIP guidance, which is enabled by default on DreamStudio's web interface.
+See also [this notebook](https://github.com/Stability-AI/stability-sdk/blob/c04381f960008f37c7392467cfaabfdf8f763e6a/nbs/demo_colab.ipynb) for more details.
+
+```sh
+# example
+# [note] --steps=35 is recommended. which is also the default value of the web interface
+STABILITY_SDK_API_KEY=xxx stability-client --guidance_preset=GUIDANCE_PRESET_FAST_BLUE --guidance_strength=0.25 --steps=35 --sampler=k_dpm_2_ancestral "A dream of a distant galaxy, by Caspar David Friedrich, matte painting trending on artstation HQ"
 ```
 
 ### SDK usage
