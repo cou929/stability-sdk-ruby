@@ -18,20 +18,20 @@ opt.banner = "Usage: stability-client [options] YOUR_PROMPT_TEXT"
 opt.separator ""
 opt.separator "Options:"
 opt.on("--api_key=VAL", "api key of DreamStudio account. You can also specify by a STABILITY_SDK_API_KEY environment variable") {|v| options[:api_key] = v }
-opt.on("-H", "--height=VAL", "height of image in pixel. default 512") {|v| options[:height] = v }
-opt.on("-W", "--width=VAL", "width of image in pixel. default 512") {|v| options[:width] = v }
-opt.on("-C", "--cfg_scale=VAL", "CFG scale factor. default 7.0") {|v| options[:cfg_scale] = v }
-opt.on("-A", "--sampler=VAL", "ddim, plms, k_euler, k_euler_ancestral, k_heun, k_dpm_2, k_dpm_2_ancestral, k_lms. default k_lms") {|v| options[:sampler] = v }
-opt.on("-s", "--steps=VAL", "number of steps. default 50") {|v| options[:steps] = v }
-opt.on("-S", "--seed=VAL", "random seed to use in integer") {|v| options[:seed] = v }
-opt.on("-p", "--prefix=VAL", "output prefixes for artifacts. default `generation`") {|v| options[:prefix] = v }
+opt.on("-H", "--height=VAL", Integer, "height of image in pixel. default 512") {|v| options[:height] = v }
+opt.on("-W", "--width=VAL", Integer, "width of image in pixel. default 512") {|v| options[:width] = v }
+opt.on("-C", "--cfg_scale=VAL", Float, "CFG scale factor. default 7.0") {|v| options[:cfg_scale] = v }
+opt.on("-A", "--sampler=VAL", String, "ddim, plms, k_euler, k_euler_ancestral, k_heun, k_dpm_2, k_dpm_2_ancestral, k_lms. default k_lms") {|v| options[:sampler] = v }
+opt.on("-s", "--steps=VAL", Integer, "number of steps. default 50") {|v| options[:steps] = v }
+opt.on("-S", "--seed=VAL", Integer, "random seed to use in integer") {|v| options[:seed] = v }
+opt.on("-p", "--prefix=VAL", String, "output prefixes for artifacts. default `generation`") {|v| options[:prefix] = v }
 opt.on("--no-store", "do not write out artifacts") {|v| options[:no_store] = v }
-opt.on("-n", "--num_samples=VAL", "number of samples to generate") {|v| options[:num_samples] = v }
-opt.on("-e", "--engine=VAL", "engine to use for inference. default `stable-diffusion-v1`") {|v| options[:engine_id] = v }
-opt.on("-i", "--init_image=VAL", "path to init image") {|v| options[:init_image] = v }
-opt.on("-m", "--mask_image=VAL", "path to mask image") {|v| options[:mask_image] = v }
-opt.on("--start_schedule=VAL", "start schedule for init image (must be greater than 0, 1 is full strength text prompt, no trace of image). default 1.0") {|v| options[:start_schedule] = v }
-opt.on("--end_schedule=VAL", "end schedule for init image. default 0.01") {|v| options[:end_schedule] = v }
+opt.on("-n", "--num_samples=VAL", Integer, "number of samples to generate. default 1") {|v| options[:num_samples] = v }
+opt.on("-e", "--engine=VAL", String, "engine to use for inference. default `stable-diffusion-v1-5`") {|v| options[:engine_id] = v }
+opt.on("-i", "--init_image=VAL", String, "path to init image") {|v| options[:init_image] = v }
+opt.on("-m", "--mask_image=VAL", String, "path to mask image") {|v| options[:mask_image] = v }
+opt.on("--start_schedule=VAL", Float, "start schedule for init image (must be greater than 0, 1 is full strength text prompt, no trace of image). default 1.0") {|v| options[:start_schedule] = v }
+opt.on("--end_schedule=VAL", Float, "end schedule for init image. default 0.01") {|v| options[:end_schedule] = v }
 opt.on("--guidance_preset=VAL", String,"Guidance preset to use. See generation.GuidancePreset for supported values. default `GUIDANCE_PRESET_NONE`") {|v| options[:guidance_preset] = v }
 opt.on("--guidance_cuts=VAL", Integer, "Number of cuts to use for guidance. default 0") {|v| options[:guidance_cuts] = v }
 opt.on("--guidance_strength=VAL", Float, "Strength of the guidance. We recommend values in range [0.0,1.0]. A good default is 0.25. default nil") {|v| options[:guidance_strength] = v }
