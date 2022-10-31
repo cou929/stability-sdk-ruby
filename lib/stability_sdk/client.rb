@@ -49,23 +49,23 @@ module StabilitySDK
     end
 
     def generate(prompt, options, &block)
-      width = options.has_key?(:width) ? options[:width].to_i : DEFAULT_IMAGE_WIDTH
-      height = options.has_key?(:height) ? options[:height].to_i : DEFAULT_IMAGE_HEIGHT
+      width = options.has_key?(:width) ? options[:width] : DEFAULT_IMAGE_WIDTH
+      height = options.has_key?(:height) ? options[:height] : DEFAULT_IMAGE_HEIGHT
 
       if width % 64 != 0 || height % 64 != 0
         raise InvalidParameter, "width and height must be a multiple of 64"
       end
 
-      samples = options.has_key?(:num_samples) ? options[:num_samples].to_i : DEFAULT_SAMPLE_SIZE
-      steps = options.has_key?(:steps) ? options[:steps].to_i : DEFAULT_STEPS
-      seed = options.has_key?(:seed) ? [options[:seed].to_i] : [rand(4294967295)]
+      samples = options.has_key?(:num_samples) ? options[:num_samples] : DEFAULT_SAMPLE_SIZE
+      steps = options.has_key?(:steps) ? options[:steps] : DEFAULT_STEPS
+      seed = options.has_key?(:seed) ? [options[:seed]] : [rand(4294967295)]
       transform = Gooseai::TransformType.new(
         diffusion: options.has_key?(:sampler) ? SAMPLER_ALGORITHMS[options[:sampler].to_sym] : DEFAULT_SAMPLER_ALGORITHM,
       )
       step_parameter = Gooseai::StepParameter.new(
         scaled_step: 0,
         sampler: Gooseai::SamplerParameters.new(
-          cfg_scale: options.has_key?(:cfg_scale) ? options[:cfg_scale].to_f : DEFAULT_CFG_SCALE,
+          cfg_scale: options.has_key?(:cfg_scale) ? options[:cfg_scale] : DEFAULT_CFG_SCALE,
         ),
       )
 
@@ -77,11 +77,11 @@ module StabilitySDK
         prompt_param << init_image_to_prompt(options[:init_image])
         step_parameter.scaled_step = 0
         step_parameter.sampler = Gooseai::SamplerParameters.new(
-          cfg_scale: options.has_key?(:cfg_scale) ? options[:cfg_scale].to_f : DEFAULT_CFG_SCALE,
+          cfg_scale: options.has_key?(:cfg_scale) ? options[:cfg_scale] : DEFAULT_CFG_SCALE,
         )
         step_parameter.schedule = Gooseai::ScheduleParameters.new(
-          start: options.has_key?(:start_schedule) ? options[:start_schedule].to_f : DEFAULT_START_SCHEDULE,
-          end: options.has_key?(:end_schedule) ? options[:end_schedule].to_f : DEFAULT_END_SCHEDULE,
+          start: options.has_key?(:start_schedule) ? options[:start_schedule] : DEFAULT_START_SCHEDULE,
+          end: options.has_key?(:end_schedule) ? options[:end_schedule] : DEFAULT_END_SCHEDULE,
         )
       end
       if options.has_key?(:mask_image)
