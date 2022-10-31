@@ -23,10 +23,15 @@ module StabilitySDK
           logger.warn "not implemented for ArtifactType #{artifact.type}"
         end
 
+        if artifact.finish_reason == :FILTER
+          logger.debug "the generated image is filtered"
+        end
+
         next if filename == "" || contents == ""
 
         File.open(filename, "wb") do |f|
           f.write(contents)
+          logger.debug "wrote #{artifact.type} to #{filename}"
         end
       end
     end

@@ -150,8 +150,20 @@ module StabilitySDK
         image: image_param
       )
 
+      @logger.debug "sending request."
+      start = Time.now
       @stub.generate(req).each do |answer|
+        duration = Time.now - start
+        if answer.artifacts.size > 0
+          artifact_types = answer.artifacts.map { |a| a.type }
+          @logger.debug "got #{answer.answer_id} with #{artifact_types} in #{duration.round(2)}s"
+        else
+          @logger.debug "got keepalive #{answer.answer_id} in #{duration.round(2)}s"
+        end
+
         block.call(answer)
+
+        start = Time.now
       end
     end
 
