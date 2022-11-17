@@ -1,7 +1,7 @@
 require "grpc"
 require "dashboard_services_pb"
 
-module StabilitySDK::Unstable
+module StabilitySDK
   class DashboardClient
     DEFAULT_API_HOST = "grpc.stability.ai:443"
 

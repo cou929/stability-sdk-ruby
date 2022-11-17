@@ -107,23 +107,29 @@ client.generate(prompt, options) do |answer|
 end
 ```
 
-### [Unstable] Dashboard API
-
-**This feature is in a very early stage of development.**
+### Dashboard API
 
 Dashboard API is a way to interact with DreamStudio Web UIs, such as getting user info, payment info, etc.
 
-Currently, there is no canonical way to get the API key for the Dashboard API. You can retrieve the key by logging in to the [DreamStudio Web page](https://beta.dreamstudio.ai/dream) and inspect request the authorization header with Chrome Developer Tool. Please be aware that how to refresh the key or an expiration period is unknown. See also https://github.com/Stability-AI/stability-sdk/issues/23
+Currently, the API key is only allowed as read-only. And this client supports only GetMe and GetOrganization actions. See also https://github.com/Stability-AI/stability-sdk/issues/23
 
 ```sh
 # get user info
-STABILITY_SDK_DASHBOARD_API_KEY=YOUR_API_KEY stability-dashboard-client-unstable get_me
+STABILITY_SDK_DASHBOARD_API_KEY=YOUR_API_KEY stability-dashboard-client get_me
 
 # get organization info
-STABILITY_SDK_DASHBOARD_API_KEY=YOUR_API_KEY stability-dashboard-client-unstable get_organization
+STABILITY_SDK_DASHBOARD_API_KEY=YOUR_API_KEY stability-dashboard-client get_organization
 
 # i.e, get remaining balance
-STABILITY_SDK_DASHBOARD_API_KEY=YOUR_API_KEY stability-dashboard-client-unstable get_organization | jq .paymentInfo.balance
+STABILITY_SDK_DASHBOARD_API_KEY=YOUR_API_KEY stability-dashboard-client get_organization | jq .paymentInfo.balance
+```
+
+```ruby
+require "stability_sdk"
+
+client = StabilitySDK::DashboardClient.new(api_key: "your api key")
+res = client.get_organization
+p res.payment_info.balance  # prints a remaining balance
 ```
 
 ## Development
