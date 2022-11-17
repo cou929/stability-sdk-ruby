@@ -33,7 +33,7 @@ class CLI < Thor
     api_key = ENV["STABILITY_SDK_DASHBOARD_API_KEY"] if ENV["STABILITY_SDK_DASHBOARD_API_KEY"]
     raise StabilitySDK::InsufficientParameter, "api key is required" if api_key.nil?
 
-    return StabilitySDK::Unstable::DashboardClient.new(api_key: api_key)
+    return StabilitySDK::DashboardClient.new(api_key: api_key)
   end
 end
 
