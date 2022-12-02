@@ -148,9 +148,13 @@ cd api-interfaces
 
 # checkout some branch/commit you need
 git fetch
-git reset --hard origin/some_branch
+git checkout origin/some_branch # or `git reset --hard origin/some_branch`
 
 cd ..
+git add
+
+# if you need to follow the updates of submodules inside the Stability-AI/api-interfaces, you have to update submodules recursively
+git submodule update --init --recursive
 ```
 
 - build
