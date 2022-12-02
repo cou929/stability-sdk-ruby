@@ -3,6 +3,8 @@
 
 require 'google/protobuf'
 
+require 'tensors_pb'
+
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_file("generation.proto", :syntax => :proto3) do
     add_message "gooseai.Token" do
@@ -28,6 +30,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
         optional :text, :string, 6
         optional :tokens, :message, 7, "gooseai.Tokens"
         optional :classifier, :message, 11, "gooseai.ClassifierParameters"
+        optional :tensor, :message, 14, "tensors.Tensor"
       end
     end
     add_message "gooseai.PromptParameters" do
@@ -48,6 +51,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       proto3_optional :latent_channels, :uint64, 3
       proto3_optional :downsampling_factor, :uint64, 4
       proto3_optional :cfg_scale, :float, 5
+      proto3_optional :init_noise_scale, :float, 6
     end
     add_message "gooseai.ConditionerParameters" do
       proto3_optional :vector_adjust_prior, :string, 1
@@ -108,6 +112,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       proto3_optional :steps, :uint64, 5
       proto3_optional :transform, :message, 6, "gooseai.TransformType"
       repeated :parameters, :message, 7, "gooseai.StepParameter"
+      proto3_optional :masked_area_init, :enum, 8, "gooseai.MaskedAreaInit"
+      proto3_optional :weight_method, :enum, 9, "gooseai.WeightMethod"
     end
     add_message "gooseai.ClassifierConcept" do
       optional :concept, :string, 1
@@ -186,6 +192,17 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       value :ARTIFACT_EMBEDDING, 5
       value :ARTIFACT_CLASSIFICATIONS, 6
       value :ARTIFACT_MASK, 7
+      value :ARTIFACT_LATENT, 8
+      value :ARTIFACT_TENSOR, 9
+    end
+    add_enum "gooseai.MaskedAreaInit" do
+      value :MASKED_AREA_INIT_ZERO, 0
+      value :MASKED_AREA_INIT_RANDOM, 1
+      value :MASKED_AREA_INIT_ORIGINAL, 2
+    end
+    add_enum "gooseai.WeightMethod" do
+      value :TEXT_ENCODER, 0
+      value :CROSS_ATTENTION, 1
     end
     add_enum "gooseai.DiffusionSampler" do
       value :SAMPLER_DDIM, 0
@@ -196,6 +213,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       value :SAMPLER_K_DPM_2, 5
       value :SAMPLER_K_DPM_2_ANCESTRAL, 6
       value :SAMPLER_K_LMS, 7
+      value :SAMPLER_K_DPMPP_2S_ANCESTRAL, 8
+      value :SAMPLER_K_DPMPP_2M, 9
     end
     add_enum "gooseai.Upscaler" do
       value :UPSCALER_RGB, 0
@@ -278,6 +297,8 @@ module Gooseai
   ChainRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ChainRequest").msgclass
   FinishReason = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.FinishReason").enummodule
   ArtifactType = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ArtifactType").enummodule
+  MaskedAreaInit = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.MaskedAreaInit").enummodule
+  WeightMethod = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.WeightMethod").enummodule
   DiffusionSampler = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.DiffusionSampler").enummodule
   Upscaler = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.Upscaler").enummodule
   GuidancePreset = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.GuidancePreset").enummodule
