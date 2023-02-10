@@ -50,13 +50,13 @@ Options:
     -H, --height=VAL                 height of image in pixel. default 512
     -W, --width=VAL                  width of image in pixel. default 512
     -C, --cfg_scale=VAL              CFG scale factor. default 7.0
-    -A, --sampler=VAL                ddim, plms, k_euler, k_euler_ancestral, k_heun, k_dpm_2, k_dpm_2_ancestral, k_lms. default k_lms
-    -s, --steps=VAL                  number of steps. default 50
+    -A, --sampler=VAL                ddim, plms, k_euler, k_euler_ancestral, k_heun, k_dpm_2, k_dpm_2_ancestral, k_lms, k_dpmpp_2s_ancestral, k_dpmpp_2m, k_dpmpp_sde. default auto-select
+    -s, --steps=VAL                  number of steps. default auto-select
     -S, --seed=VAL                   random seed to use in integer
     -p, --prefix=VAL                 output prefixes for artifacts. default `generation`
         --no-store                   do not write out artifacts
-    -n, --num_samples=VAL            number of samples to generate
-    -e, --engine=VAL                 engine to use for inference. default `stable-diffusion-v1`
+    -n, --num_samples=VAL            number of samples to generate. default 1
+    -e, --engine=VAL                 engine to use for inference. default `stable-diffusion-v1-5`
     -i, --init_image=VAL             path to init image
     -m, --mask_image=VAL             path to mask image
         --start_schedule=VAL         start schedule for init image (must be greater than 0, 1 is full strength text prompt, no trace of image). default 1.0

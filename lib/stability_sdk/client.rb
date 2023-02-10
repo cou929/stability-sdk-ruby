@@ -8,10 +8,8 @@ module StabilitySDK
     DEFAULT_IMAGE_WIDTH = 512
     DEFAULT_IMAGE_HEIGHT = 512
     DEFAULT_SAMPLE_SIZE = 1
-    DEFAULT_STEPS = 50
     DEFAULT_ENGINE_ID = "stable-diffusion-v1-5"
     DEFAULT_CFG_SCALE = 7.0
-    DEFAULT_SAMPLER_ALGORITHM = Gooseai::DiffusionSampler::SAMPLER_K_LMS
     DEFAULT_START_SCHEDULE = 1.0
     DEFAULT_END_SCHEDULE = 0.01
 
@@ -24,6 +22,9 @@ module StabilitySDK
       "k_dpm_2": Gooseai::DiffusionSampler::SAMPLER_K_DPM_2,
       "k_dpm_2_ancestral": Gooseai::DiffusionSampler::SAMPLER_K_DPM_2_ANCESTRAL,
       "k_lms": Gooseai::DiffusionSampler::SAMPLER_K_LMS,
+      "k_dpmpp_2s_ancestral": Gooseai::DiffusionSampler::SAMPLER_K_DPMPP_2S_ANCESTRAL,
+      "k_dpmpp_2m": Gooseai::DiffusionSampler::SAMPLER_K_DPMPP_2M,
+      "k_dpmpp_sde": Gooseai::DiffusionSampler::SAMPLER_K_DPMPP_SDE,
     }
 
     def initialize(options={})
@@ -57,10 +58,10 @@ module StabilitySDK
       end
 
       samples = options.has_key?(:num_samples) ? options[:num_samples] : DEFAULT_SAMPLE_SIZE
-      steps = options.has_key?(:steps) ? options[:steps] : DEFAULT_STEPS
+      steps = options.has_key?(:steps) ? options[:steps] : nil
       seed = options.has_key?(:seed) ? [options[:seed]] : [rand(4294967295)]
       transform = Gooseai::TransformType.new(
-        diffusion: options.has_key?(:sampler) ? SAMPLER_ALGORITHMS[options[:sampler].to_sym] : DEFAULT_SAMPLER_ALGORITHM,
+        diffusion: options.has_key?(:sampler) ? SAMPLER_ALGORITHMS[options[:sampler].to_sym] : nil,
       )
       step_parameter = Gooseai::StepParameter.new(
         scaled_step: 0,
