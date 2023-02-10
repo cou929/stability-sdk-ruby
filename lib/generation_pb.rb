@@ -3,6 +3,7 @@
 
 require 'google/protobuf'
 
+require 'google/protobuf/struct_pb'
 require 'tensors_pb'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
@@ -52,6 +53,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       proto3_optional :downsampling_factor, :uint64, 4
       proto3_optional :cfg_scale, :float, 5
       proto3_optional :init_noise_scale, :float, 6
+      proto3_optional :step_noise_scale, :float, 7
     end
     add_message "gooseai.ConditionerParameters" do
       proto3_optional :vector_adjust_prior, :string, 1
@@ -114,6 +116,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       repeated :parameters, :message, 7, "gooseai.StepParameter"
       proto3_optional :masked_area_init, :enum, 8, "gooseai.MaskedAreaInit"
       proto3_optional :weight_method, :enum, 9, "gooseai.WeightMethod"
+      proto3_optional :quantize, :bool, 10
     end
     add_message "gooseai.ClassifierConcept" do
       optional :concept, :string, 1
@@ -130,6 +133,49 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       repeated :categories, :message, 1, "gooseai.ClassifierCategory"
       repeated :exceeds, :message, 2, "gooseai.ClassifierCategory"
       proto3_optional :realized_action, :enum, 3, "gooseai.Action"
+    end
+    add_message "gooseai.InterpolateParameters" do
+      repeated :ratios, :float, 1
+      proto3_optional :mode, :enum, 2, "gooseai.InterpolateMode"
+    end
+    add_message "gooseai.TransformBlend" do
+      optional :amount, :float, 1
+      optional :target, :message, 2, "gooseai.Artifact"
+    end
+    add_message "gooseai.TransformColorAdjust" do
+      proto3_optional :brightness, :float, 1
+      proto3_optional :contrast, :float, 2
+      proto3_optional :hue, :float, 3
+      proto3_optional :saturation, :float, 4
+      proto3_optional :lightness, :float, 5
+    end
+    add_message "gooseai.TransformColorMatch" do
+      optional :color_mode, :enum, 1, "gooseai.ColorMatchMode"
+      optional :image, :message, 2, "gooseai.Artifact"
+    end
+    add_message "gooseai.TransformDepthCalc" do
+      proto3_optional :blend_weight, :float, 1
+      proto3_optional :blur_radius, :uint32, 2
+      proto3_optional :reverse, :bool, 3
+    end
+    add_message "gooseai.TransformMatrix" do
+      repeated :data, :float, 1
+    end
+    add_message "gooseai.TransformResample" do
+      optional :border_mode, :enum, 1, "gooseai.BorderMode"
+      optional :transform, :message, 2, "gooseai.TransformMatrix"
+      proto3_optional :prev_transform, :message, 3, "gooseai.TransformMatrix"
+      proto3_optional :depth_warp, :float, 4
+      proto3_optional :export_mask, :bool, 5
+    end
+    add_message "gooseai.TransformParameters" do
+      oneof :transform do
+        optional :blend, :message, 1, "gooseai.TransformBlend"
+        optional :color_adjust, :message, 2, "gooseai.TransformColorAdjust"
+        optional :color_match, :message, 3, "gooseai.TransformColorMatch"
+        optional :depth_calc, :message, 4, "gooseai.TransformDepthCalc"
+        optional :resample, :message, 5, "gooseai.TransformResample"
+      end
     end
     add_message "gooseai.AssetParameters" do
       optional :action, :enum, 1, "gooseai.AssetAction"
@@ -156,10 +202,13 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :requested_type, :enum, 3, "gooseai.ArtifactType"
       repeated :prompt, :message, 4, "gooseai.Prompt"
       proto3_optional :conditioner, :message, 6, "gooseai.ConditionerParameters"
+      proto3_optional :extras, :message, 2047, "google.protobuf.Struct"
       oneof :params do
         optional :image, :message, 5, "gooseai.ImageParameters"
         optional :classifier, :message, 7, "gooseai.ClassifierParameters"
         optional :asset, :message, 8, "gooseai.AssetParameters"
+        optional :interpolate, :message, 11, "gooseai.InterpolateParameters"
+        optional :transform, :message, 12, "gooseai.TransformParameters"
       end
     end
     add_message "gooseai.OnStatus" do
@@ -194,6 +243,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       value :ARTIFACT_MASK, 7
       value :ARTIFACT_LATENT, 8
       value :ARTIFACT_TENSOR, 9
+      value :ARTIFACT_DEPTH, 10
     end
     add_enum "gooseai.MaskedAreaInit" do
       value :MASKED_AREA_INIT_ZERO, 0
@@ -215,6 +265,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       value :SAMPLER_K_LMS, 7
       value :SAMPLER_K_DPMPP_2S_ANCESTRAL, 8
       value :SAMPLER_K_DPMPP_2M, 9
+      value :SAMPLER_K_DPMPP_SDE, 10
     end
     add_enum "gooseai.Upscaler" do
       value :UPSCALER_RGB, 0
@@ -247,6 +298,23 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     add_enum "gooseai.ClassifierMode" do
       value :CLSFR_MODE_ZEROSHOT, 0
       value :CLSFR_MODE_MULTICLASS, 1
+    end
+    add_enum "gooseai.InterpolateMode" do
+      value :INTERPOLATE_LINEAR, 0
+      value :INTERPOLATE_RIFE, 1
+      value :INTERPOLATE_VAE_LINEAR, 2
+      value :INTERPOLATE_VAE_SLERP, 3
+    end
+    add_enum "gooseai.BorderMode" do
+      value :BORDER_REFLECT, 0
+      value :BORDER_REPLICATE, 1
+      value :BORDER_WRAP, 2
+      value :BORDER_ZERO, 3
+    end
+    add_enum "gooseai.ColorMatchMode" do
+      value :COLOR_MATCH_HSV, 0
+      value :COLOR_MATCH_LAB, 1
+      value :COLOR_MATCH_RGB, 2
     end
     add_enum "gooseai.AssetAction" do
       value :ASSET_PUT, 0
@@ -288,6 +356,14 @@ module Gooseai
   ClassifierConcept = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ClassifierConcept").msgclass
   ClassifierCategory = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ClassifierCategory").msgclass
   ClassifierParameters = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ClassifierParameters").msgclass
+  InterpolateParameters = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.InterpolateParameters").msgclass
+  TransformBlend = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.TransformBlend").msgclass
+  TransformColorAdjust = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.TransformColorAdjust").msgclass
+  TransformColorMatch = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.TransformColorMatch").msgclass
+  TransformDepthCalc = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.TransformDepthCalc").msgclass
+  TransformMatrix = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.TransformMatrix").msgclass
+  TransformResample = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.TransformResample").msgclass
+  TransformParameters = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.TransformParameters").msgclass
   AssetParameters = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.AssetParameters").msgclass
   AnswerMeta = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.AnswerMeta").msgclass
   Answer = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.Answer").msgclass
@@ -305,6 +381,9 @@ module Gooseai
   ModelArchitecture = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ModelArchitecture").enummodule
   Action = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.Action").enummodule
   ClassifierMode = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ClassifierMode").enummodule
+  InterpolateMode = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.InterpolateMode").enummodule
+  BorderMode = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.BorderMode").enummodule
+  ColorMatchMode = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.ColorMatchMode").enummodule
   AssetAction = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.AssetAction").enummodule
   AssetUse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.AssetUse").enummodule
   StageAction = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("gooseai.StageAction").enummodule
