@@ -21,8 +21,8 @@ opt.on("--api_key=VAL", "api key of DreamStudio account. You can also specify by
 opt.on("-H", "--height=VAL", Integer, "height of image in pixel. default 512") {|v| options[:height] = v }
 opt.on("-W", "--width=VAL", Integer, "width of image in pixel. default 512") {|v| options[:width] = v }
 opt.on("-C", "--cfg_scale=VAL", Float, "CFG scale factor. default 7.0") {|v| options[:cfg_scale] = v }
-opt.on("-A", "--sampler=VAL", String, "ddim, plms, k_euler, k_euler_ancestral, k_heun, k_dpm_2, k_dpm_2_ancestral, k_lms. default k_lms") {|v| options[:sampler] = v }
-opt.on("-s", "--steps=VAL", Integer, "number of steps. default 50") {|v| options[:steps] = v }
+opt.on("-A", "--sampler=VAL", String, "ddim, plms, k_euler, k_euler_ancestral, k_heun, k_dpm_2, k_dpm_2_ancestral, k_lms, k_dpmpp_2s_ancestral, k_dpmpp_2m, k_dpmpp_sde. default auto-select") {|v| options[:sampler] = v }
+opt.on("-s", "--steps=VAL", Integer, "number of steps. default auto-select") {|v| options[:steps] = v }
 opt.on("-S", "--seed=VAL", Integer, "random seed to use in integer") {|v| options[:seed] = v }
 opt.on("-p", "--prefix=VAL", String, "output prefixes for artifacts. default `generation`") {|v| options[:prefix] = v }
 opt.on("--no-store", "do not write out artifacts") {|v| options[:no_store] = v }
