@@ -66,6 +66,7 @@ Options:
         --guidance_strength=VAL      Strength of the guidance. We recommend values in range [0.0,1.0]. A good default is 0.25. default nil
         --guidance_prompt=VAL        Prompt to use for guidance, defaults to `YOUR_PROMPT_TEXT` argument (above) if not specified.
         --guidance_models=VAL        Models to use for guidance. default nil
+    -t, --artifact_types=VAL         filter artifacts by type (ARTIFACT_IMAGE, ARTIFACT_TEXT, ARTIFACT_CLASSIFICATIONS, etc)
     -v, --verbose
 ```
 
