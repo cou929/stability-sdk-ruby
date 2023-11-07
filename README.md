@@ -56,7 +56,7 @@ Options:
     -p, --prefix=VAL                 output prefixes for artifacts. default `generation`
         --no-store                   do not write out artifacts
     -n, --num_samples=VAL            number of samples to generate. default 1
-    -e, --engine=VAL                 engine to use for inference. default `stable-diffusion-v1-5`
+    -e, --engine=VAL                 engine to use for inference. default `stable-diffusion-xl-1024-v1-0`
     -i, --init_image=VAL             path to init image
     -m, --mask_image=VAL             path to mask image
         --start_schedule=VAL         start schedule for init image (must be greater than 0, 1 is full strength text prompt, no trace of image). default 1.0
