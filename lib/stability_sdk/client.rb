@@ -8,7 +8,7 @@ module StabilitySDK
     DEFAULT_IMAGE_WIDTH = 512
     DEFAULT_IMAGE_HEIGHT = 512
     DEFAULT_SAMPLE_SIZE = 1
-    DEFAULT_ENGINE_ID = "stable-diffusion-v1-5"
+    DEFAULT_ENGINE_ID = "stable-diffusion-xl-1024-v1-0"
     DEFAULT_CFG_SCALE = 7.0
     DEFAULT_START_SCHEDULE = 1.0
     DEFAULT_END_SCHEDULE = 0.01
