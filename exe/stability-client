@@ -38,6 +38,7 @@ opt.on("--guidance_strength=VAL", Float, "Strength of the guidance. We recommend
 opt.on("--guidance_prompt=VAL", String, "Prompt to use for guidance, defaults to `YOUR_PROMPT_TEXT` argument (above) if not specified.") {|v| options[:guidance_prompt] = v }
 opt.on("--guidance_models=VAL", Array, "Models to use for guidance. default nil") {|v| options[:guidance_models] = v }
 opt.on("-t", "--artifact_types=VAL", Array, "filter artifacts by type (ARTIFACT_IMAGE, ARTIFACT_TEXT, ARTIFACT_CLASSIFICATIONS, etc)") {|v| options[:artifact_types] = v }
+opt.on("--prompt_weight=VAL", Float, "Weight of the prompt. Currently multi-prompting is not supported yet. default 1") {|v| options[:prompt_weight] = v }
 opt.on("-v", "--verbose") { logger.level = Logger::DEBUG }
 opt.parse!(ARGV)
 

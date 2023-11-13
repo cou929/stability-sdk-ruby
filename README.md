@@ -67,6 +67,7 @@ Options:
         --guidance_prompt=VAL        Prompt to use for guidance, defaults to `YOUR_PROMPT_TEXT` argument (above) if not specified.
         --guidance_models=VAL        Models to use for guidance. default nil
     -t, --artifact_types=VAL         filter artifacts by type (ARTIFACT_IMAGE, ARTIFACT_TEXT, ARTIFACT_CLASSIFICATIONS, etc)
+        --prompt_weight=VAL          Weight of the prompt. Currently multi-prompting is not supported yet. default 1"
     -v, --verbose
 ```
 
