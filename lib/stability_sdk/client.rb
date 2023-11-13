@@ -72,10 +72,12 @@ module StabilitySDK
 
       prompt_param = []
       if prompt != ""
-        prompt_param << Gooseai::Prompt.new(text: prompt)
+        param = Gooseai::Prompt.new(text: prompt)
+        param.parameters = Gooseai::PromptParameters.new(weight: options[:prompt_weight]) if options.has_key?(:prompt_weight)
+        prompt_param << param
       end
       if options.has_key?(:init_image)
-        prompt_param << init_image_to_prompt(options[:init_image])
+        prompt_param << init_image_to_prompt(options[:init_image], options[:prompt_weight])
         step_parameter.scaled_step = 0
         step_parameter.sampler = Gooseai::SamplerParameters.new(
           cfg_scale: options.has_key?(:cfg_scale) ? options[:cfg_scale] : DEFAULT_CFG_SCALE,
@@ -168,17 +170,18 @@ module StabilitySDK
       end
     end
 
-    def init_image_to_prompt(path)
+    def init_image_to_prompt(path, weight)
       bin = IO.binread(path)
-      return Gooseai::Prompt.new(
+      prompt = Gooseai::Prompt.new(
         artifact: Gooseai::Artifact.new(
           type: Gooseai::ArtifactType::ARTIFACT_IMAGE,
           binary: bin,
-        ),
-        parameters: Gooseai::PromptParameters.new(
-          init: true
-        ),
+        )
       )
+      unless weight.nil?
+        prompt.parameters = Gooseai::PromptParameters.new(weight: weight)
+      end
+      return prompt
     end
 
     def mask_image_to_prompt(path)
