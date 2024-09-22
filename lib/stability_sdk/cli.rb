@@ -28,7 +28,7 @@ module StabilitySDK
         when :ARTIFACT_CLASSIFICATIONS
           ext = "pb.json"
           filename = "#{filename_base}.#{ext}"
-          contents = artifact.classifier.to_json
+          contents = artifact.to_json
         else
           logger.warn "not implemented for ArtifactType #{artifact.type}"
         end

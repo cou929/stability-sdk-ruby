@@ -30,5 +30,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "mime-types", ">= 3.0.0"
   spec.add_dependency "fastimage", "~> 2.2", ">= 2.2.6"
   spec.add_dependency "thor", ">= 1.2.1"
+  spec.add_dependency "google-protobuf", ">= 4.0.0"
   spec.add_development_dependency "grpc-tools"
 end

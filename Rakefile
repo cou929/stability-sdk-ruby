@@ -18,3 +18,8 @@ desc "Compile a dashboard proto file"
 task :protoc_dashboard do
   sh "grpc_tools_ruby_protoc -I api-interfaces/src/proto/ --ruby_out=lib --grpc_out=lib api-interfaces/src/proto/dashboard.proto"
 end
+
+desc "Compile a tensorizer proto file"
+task :protoc_tensorizer do
+  sh "grpc_tools_ruby_protoc -I api-interfaces/src/tensorizer/proto/ --ruby_out=lib --grpc_out=lib api-interfaces/src/tensorizer/proto/tensors.proto"
+end
